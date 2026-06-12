@@ -1,6 +1,7 @@
 const Course = require("../models/Course");
 const Assignment = require("../models/Assignment");
 const Submission = require("../models/Submission");
+const Job = require("../models/Job");
 
 // Student Dashboard
 const getStudentDashboard = async (req, res) => {
@@ -116,10 +117,65 @@ const submitAssignment = async (req, res) => {
   }
 };
 
+// View Jobs
+const getJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find();
+
+    res.status(200).json({
+      success: true,
+      jobs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Apply Job
+const applyJob = async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.jobId);
+
+    if (!job) {
+      return res.status(404).json({
+        success: false,
+        message: "Job not found",
+      });
+    }
+
+    if (job.applicants.includes(req.user._id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Already Applied",
+      });
+    }
+
+    job.applicants.push(req.user._id);
+
+    await job.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Applied Successfully",
+      job,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getStudentDashboard,
   getCourses,
   enrollCourse,
   getAssignments,
   submitAssignment,
+  getJobs,
+  applyJob,
 };

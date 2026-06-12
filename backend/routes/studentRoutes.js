@@ -7,6 +7,8 @@ const {
   enrollCourse,
   getAssignments,
   submitAssignment,
+  getJobs,
+  applyJob,
 } = require("../controllers/studentController");
 
 const {
@@ -52,7 +54,19 @@ router.post(
   submitAssignment
 );
 
-const Assignment =
-require("../models/Assignment");
+// Jobs
+router.get(
+  "/jobs",
+  protect,
+  studentOnly,
+  getJobs
+);
+
+router.post(
+  "/apply/:jobId",
+  protect,
+  studentOnly,
+  applyJob
+);
 
 module.exports = router;
