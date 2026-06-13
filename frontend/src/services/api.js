@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+ baseURL: "https://learn2-hireee-pn2el625c-anitha-mallina.vercel.app/api",
 });
 
 export default API;
